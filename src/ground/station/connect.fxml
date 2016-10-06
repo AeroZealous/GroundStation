@@ -5,65 +5,93 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" prefHeight="167.0" prefWidth="319.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ground.station.ConnectController">
+<fx:root alignment="CENTER" hgap="10.0" prefHeight="266.0" prefWidth="333.0" type="GridPane" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" >
+   <columnConstraints>
+      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="240.0" minWidth="112.0" prefWidth="112.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="206.0" minWidth="199.0" prefWidth="206.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="320.0" prefHeight="320.0" valignment="TOP" vgrow="ALWAYS" />
+   </rowConstraints>
    <children>
-      <GridPane maxWidth="1.7976931348623157E308" prefHeight="91.0" prefWidth="584.0" vgap="10.0">
-         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="240.0" minWidth="116.0" prefWidth="116.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="193.0" prefWidth="193.0" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints maxHeight="194.0" prefHeight="80.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="320.0" prefHeight="320.0" vgrow="SOMETIMES" />
-         </rowConstraints>
-         <children>
-            <Label text="Port" GridPane.halignment="RIGHT">
-               <GridPane.margin>
-                  <Insets right="10.0" />
-               </GridPane.margin>
-            </Label>
-            <ComboBox fx:id="portList" prefWidth="150.0" GridPane.columnIndex="1">
-               <GridPane.margin>
-                  <Insets left="10.0" />
-               </GridPane.margin>
-            </ComboBox>
-            <ChoiceBox fx:id="baudRates" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets left="10.0" />
-               </GridPane.margin>
-            </ChoiceBox>
-            <Label text="Baud Rate" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets right="10.0" />
-               </GridPane.margin>
-            </Label>
-         </children>
-      </GridPane>
-      <HBox alignment="CENTER" spacing="30.0">
-         <children>
-            <Button fx:id="scan" mnemonicParsing="false" onAction="#scan" text="Scan" />
-            <Button fx:id="connect" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#connect" text="Connect" />
-         </children>
-      </HBox>
-      <StackPane>
-         <children>
-            <Label fx:id="error" text="Error Text" textAlignment="CENTER" textFill="#790808" wrapText="true">
-               <font>
-                  <Font name="Droid Sans Mono" size="16.0" />
-               </font>
-            </Label>
-         </children>
-      </StackPane>
+      <Label text="Port" GridPane.halignment="RIGHT">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin>
+      </Label>
+      <Button fx:id="scan" mnemonicParsing="false" onAction="#scan" text="Scan" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="connect" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#connect" text="Connect" GridPane.columnIndex="1" GridPane.rowIndex="5">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </Button>
+      <ComboBox fx:id="portList" editable="true" prefWidth="150.0" GridPane.columnIndex="1">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </ComboBox>
+      <ComboBox fx:id="baudRates" editable="true" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </ComboBox>
+      <Label text="Baud Rate" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Data Bits" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+         <padding>
+            <Insets right="10.0" />
+         </padding>
+      </Label>
+      <ChoiceBox fx:id="dataBits" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </ChoiceBox>
+      <Label text="Parity" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+         <padding>
+            <Insets right="10.0" />
+         </padding>
+      </Label>
+      <ChoiceBox fx:id="parity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </ChoiceBox>
+      <Label text="Stop Bits" GridPane.rowIndex="4">
+         <padding>
+            <Insets right="10.0" />
+         </padding>
+      </Label>
+      <ChoiceBox fx:id="stopBits" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </ChoiceBox>
+      <TextArea fx:id="info" editable="false" maxWidth="1.7976931348623157E308" prefHeight="24.0" prefWidth="317.0" style="-fx-background-color: lightcoral; -fx-background-radius: 5px; -fx-text-fill: maroon;" text="Error" wrapText="true" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="6" GridPane.vgrow="ALWAYS">
+         <padding>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </padding>
+      </TextArea>
    </children>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
    </padding>
-</VBox>
+</fx:root>
