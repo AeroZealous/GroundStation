@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -39,7 +41,7 @@ public class ConnectController extends GridPane implements Initializable {
     @FXML
     private ChoiceBox<Parity> parity;
     @FXML
-    private ChoiceBox<Integer> stopBits;
+    private ChoiceBox<StopBits> stopBits;
     @FXML
     private Button connect;
     @FXML
@@ -57,12 +59,13 @@ public class ConnectController extends GridPane implements Initializable {
     public static final Integer[] BAUD = {
         115200, 19200, 9600
     };
+
     enum Parity {
         NONE(SerialPort.PARITY_NONE),
         ODD(SerialPort.PARITY_ODD),
         EVEN(SerialPort.PARITY_EVEN);
 
-        int num;
+        private final int num;
 
         private Parity(int num) {
             this.num = num;
@@ -73,7 +76,31 @@ public class ConnectController extends GridPane implements Initializable {
         }
     }
 
-     FXMLLoader loader;
+    enum StopBits {
+        ONE(SerialPort.STOPBITS_1, "1"),
+        TWO(SerialPort.STOPBITS_2, "2"),
+        ONE_HALF(SerialPort.STOPBITS_1_5, "1.5");
+
+        private final int bits;
+        private final String text;
+
+        private StopBits(int bits, String text) {
+            this.bits = bits;
+            this.text = text;
+        }
+
+        public int getBits() {
+            return bits;
+        }
+
+        @Override
+        public String toString() {
+            return text;
+        }
+    }
+
+    FXMLLoader loader;
+
     public ConnectController() {
         loader = new FXMLLoader(getClass().getResource("connect.fxml"));
         loader.setRoot(this);
@@ -82,6 +109,7 @@ public class ConnectController extends GridPane implements Initializable {
             loader.load();
         } catch (IOException ex) {
             Logger.getLogger(ConnectController.class.getName()).log(Level.SEVERE, null, ex);
+            getChildren().add(new Label("Could not  load FXML"));
         }
     }
 
@@ -99,25 +127,7 @@ public class ConnectController extends GridPane implements Initializable {
         parity.getItems().setAll(Parity.values());
         parity.getSelectionModel().selectFirst();
 
-        stopBits.getItems().setAll(1, 2, 3);
-        stopBits.setConverter(new StringConverter<Integer>() {
-            @Override
-            public String toString(Integer stopbit) {
-                if (stopbit == 3) {
-                    return "1.5";
-                }
-                return Integer.toString(stopbit);
-            }
-
-            @Override
-            public Integer fromString(String string) {
-                double stopbits = Double.parseDouble(string);
-                if (stopbits == 1.5) {
-                    stopbits = 3;
-                }
-                return (int) stopbits;
-            }
-        });
+        stopBits.getItems().setAll(StopBits.values());
         stopBits.getSelectionModel().selectFirst();
 
         portList.setPlaceholder(new Text("No Ports Available"));
@@ -130,25 +140,23 @@ public class ConnectController extends GridPane implements Initializable {
     }
 
     @FXML
-    String[] scan() {
-        info.setText("");
+    public String[] scan() {
         portList.getItems().setAll(OPEN_PORTS.keySet());
         String[] portNames = SerialPortList.getPortNames();
         if (portNames.length == 0) {
             info.setText("No ports were found");
-//            connect.setDisable(true);
             return null;
+        } else {
+            info.setText("");
         }
 
         portList.getItems().addAll(portNames);
-        System.out.println("OPEN_PORTS.keySet() = " + OPEN_PORTS.keySet());
         portList.getSelectionModel().selectFirst();
-//        connect.setDisable(false);
         return portNames;
     }
 
     @FXML
-    void connect() {
+    private void connect() {
         String portName = portList.getSelectionModel().getSelectedItem();
         //Check if the port is already opened
         SerialPort port = openPorts.get(portName);
@@ -162,7 +170,7 @@ public class ConnectController extends GridPane implements Initializable {
 
         try {
             port.openPort();
-            port.setParams(baudRates.getValue(), dataBits.getValue(), SerialPort.STOPBITS_1, parity.getValue().getParity());
+            port.setParams(baudRates.getValue(), dataBits.getValue(), stopBits.getValue().getBits(), parity.getValue().getParity());
             openPorts.put(portName, port);
             portList.getItems().add(portName);
         } catch (SerialPortException ex) {
@@ -189,4 +197,7 @@ public class ConnectController extends GridPane implements Initializable {
         }
     }
 
+    public ObservableList<SerialPort> getOpenPorts() {
+        return null;
+    }
 }

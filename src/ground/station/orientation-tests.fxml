@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.Double?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="513.0" prefWidth="686.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Group layoutX="218.0" layoutY="38.0">
+         <children>
+            <Line endX="25.0" layoutY="-10.0" stroke="WHITE" strokeWidth="5.0" />
+            <Line endX="25.0" layoutY="40.0" stroke="WHITE" strokeWidth="5.0" />
+            <Line endX="25.0" layoutY="5.0" stroke="WHITE" strokeWidth="5.0" />
+            <Line endX="25.0" layoutY="55.0" stroke="WHITE" strokeWidth="5.0" />
+         </children>
+         <effect>
+            <DropShadow height="51.36" radius="25.18" spread="0.19" width="51.36" />
+         </effect>
+      </Group>
+      <Group layoutX="572.0" layoutY="100.0" />
+      <StackPane layoutX="87.0" layoutY="211.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(to bottom, skyblue 48%,white 48.1% ,white 51.99%, #d7b17b 52%); -fx-background-radius: 100%; -fx-border-color: black; -fx-border-radius: 100%; -fx-border-width: 4;">
+         <children>
+            <StackPane maxWidth="-Infinity" prefHeight="142.0" prefWidth="30.0" style="-fx-border-color: gainsboro; -fx-border-width: 0 15 0 15; -fx-border-style: segments(8,10);">
+               <StackPane.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </StackPane.margin>
+            </StackPane>
+            <Polygon stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" StackPane.alignment="BOTTOM_CENTER">
+              <points>
+                <Double fx:value="0.0" />
+                <Double fx:value="0.0" />
+                <Double fx:value="15.0" />
+                <Double fx:value="-20.0" />
+                <Double fx:value="30.0" />
+                <Double fx:value="0.0" />
+              </points>
+            </Polygon>
+         </children></StackPane>
+      <StackPane layoutX="422.0" layoutY="195.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-radius: 100%; -fx-border-color: black; -fx-border-radius: 100%; -fx-border-width: 4;">
+         <children>
+            <StackPane prefHeight="200.0" prefWidth="200.0" rotate="17.1" style="-fx-background-color: linear-gradient(to bottom, skyblue 48%,white 48.1% ,white 51.99%, #d7b17b 52%); -fx-background-radius: 100%;">
+               <padding>
+                  <Insets top="10.0" />
+               </padding>
+            </StackPane>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="180.69°" StackPane.alignment="BOTTOM_CENTER">
+               <font>
+                  <Font name="Droid Sans" size="18.0" />
+               </font>
+               <StackPane.margin>
+                  <Insets bottom="30.0" />
+               </StackPane.margin>
+            </Text>
+            <Polygon stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" StackPane.alignment="BOTTOM_CENTER">
+               <points>
+                  <Double fx:value="0.0" />
+                  <Double fx:value="0.0" />
+                  <Double fx:value="15.0" />
+                  <Double fx:value="-20.0" />
+                  <Double fx:value="30.0" />
+                  <Double fx:value="0.0" />
+               </points>
+            </Polygon>
+         </children>
+      </StackPane>
+      <StackPane layoutX="311.0" layoutY="236.0" maxWidth="-Infinity" prefHeight="172.0" prefWidth="30.0" style="-fx-background-color: linear-gradient(from 0 0 to 0 8,repeat, gainsboro 0%,gainsboro 49.99%, transparent 50%, transparent 100%);" />
+      <StackPane layoutX="356.0" layoutY="78.0" maxWidth="-Infinity" prefHeight="148.0" prefWidth="30.0" style="-fx-border-color: gainsboro; -fx-border-width: 0 15 0 15; -fx-border-style: segments(8,10);" />
+   </children>
+</AnchorPane>

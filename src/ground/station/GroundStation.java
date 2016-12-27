@@ -1,150 +1,103 @@
 package ground.station;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.collections.MapChangeListener;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.Tab;
 import javafx.stage.Stage;
 import jssc.SerialPort;
-import jssc.SerialPortEvent;
-import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 
 /**
  *
  * @author Siddhesh Rane
  */
-public class GroundStation extends Application {
+public class GroundStation extends Application implements Initializable {
+
+    @FXML
+    private Tab connectTab;
+    @FXML
+    private Tab plotsTab;
+    @FXML
+    private Tab consoleTab;
+
+    private final ConnectController connect;
+    private SensorPlotter plotter;
 
     @Override
     public void start(Stage primaryStage) {
 
-        //Uncomment any one demo
-//        noiseSimulatorTest(primaryStage);
-//        arduinoSerialConnectorTest(primaryStage);
-//        serialMonitorTest(primaryStage);
-        serialConnectionTest(primaryStage);
-    }
-
-    void arduinoSerialConnectorTest(Stage primaryStage) {
-        BorderPane root = new BorderPane();
-        Scene scene = new Scene(root);
-        FXMLLoader fXMLLoader = new FXMLLoader(getClass().getResource("connect.fxml"));
-        GridPane gridRoot = new GridPane();
-        fXMLLoader.setRoot(gridRoot);
-        fXMLLoader.setController(new ConnectController());
-        Parent parent = new StackPane(new Label("Could not load view from FXML"));
+        FXMLLoader loader = new FXMLLoader(GroundStation.class.getResource("GroundStation.fxml"));
+        loader.setController(this);
+        Parent root = new Label("Could not load fxml file");
         try {
-            parent = fXMLLoader.load();
+            root = loader.load();
         } catch (IOException ex) {
             Logger.getLogger(GroundStation.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Couldnt load fxml");
         }
-        root.setCenter(parent);
-        primaryStage.setTitle("Connect to Arduino");
+        Scene scene = new Scene(root);
+
+        primaryStage.setTitle("Ground Station");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    void noiseSimulatorTest(Stage primaryStage) {
-
-        BorderPane root = new BorderPane();
-        Scene scene = new Scene(root, 300, 250);
-        NoiseSimulator noiseSimulator = new NoiseSimulator();
-        root.setCenter(noiseSimulator);
-
-        primaryStage.setTitle("Noise Simulator");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        noiseSimulator.timeline.play();
-    }
-
-    SerialPort monitorPort;
-
-    void serialMonitorTest(Stage primaryStage) {
-
-        ConnectController connector = new ConnectController();
-
-        TextArea content = new TextArea();
-        TextField portBox = new TextField();
-        portBox.setPromptText("/dev/ttyACM0 or /dev/pts/1");
-        Button connect = new Button("Connect");
-
-        VBox root = new VBox(new HBox(portBox, connect), content);
-        VBox.setVgrow(content, Priority.ALWAYS);
-        HBox.setHgrow(portBox, Priority.ALWAYS);
-
-        final StringBuilder buffer = new StringBuilder();
-        final SerialPortEventListener serialPortEventListener = new SerialPortEventListener() {
-            @Override
-            public void serialEvent(SerialPortEvent serialPortEvent) {
-                if (serialPortEvent.getEventValue() > 0) {
-                    try {
-                        buffer.append(monitorPort.readString());
-                        content.setText(buffer.toString());
-                    } catch (SerialPortException ex) {
-                        Logger.getLogger(GroundStation.class.getName()).log(Level.SEVERE, null, ex);
-                        content.setText(ex.getMessage());
-                    }
-                }
-            }
-        };
-
-        connect.setOnAction(ae -> {
+    @Override
+    public void stop() throws Exception {
+        if (plotter != null && plotter.getSerialDevice() != null) {
             try {
-                content.setText("");
-                if (monitorPort != null) {
-                    monitorPort.closePort();
+                if (plotter.getSerialDevice().getSerialPort().isOpened()) {
+                    plotter.getSerialDevice().getSerialPort().closePort();
                 }
-                connect.setText("Connect");
-                SerialPort newPort = new SerialPort(portBox.getText());
-                newPort.openPort();
-                monitorPort = newPort;
-                monitorPort.addEventListener(serialPortEventListener);
-                connect.setText("Disconnect");
             } catch (SerialPortException ex) {
                 Logger.getLogger(GroundStation.class.getName()).log(Level.SEVERE, null, ex);
-                content.setText(ex.getMessage());
             }
-        });
+        }
+        super.stop(); //To change body of generated methods, choose Tools | Templates.
+    }
 
-        Scene scene = new Scene(root);
-        primaryStage.setOnCloseRequest(v -> {
-            if (monitorPort != null && monitorPort.isOpened()) {
-                try {
-                    monitorPort.closePort();
-                } catch (SerialPortException ex) {
-                    Logger.getLogger(GroundStation.class.getName()).log(Level.SEVERE, null, ex);
+    public GroundStation() {
+        connect = new ConnectController();
+        connect.OPEN_PORTS.addListener(new MapChangeListener<String, SerialPort>() {
+            @Override
+            public void onChanged(MapChangeListener.Change<? extends String, ? extends SerialPort> change) {
+                if (change.wasAdded()) {
+                    SerialPort deviceAdded = change.getValueAdded();
+                    connectDevice(new SerialDevice(deviceAdded));
                 }
             }
         });
-
-        primaryStage.setTitle("Serial monitor");
-        primaryStage.setScene(scene);
-        primaryStage.show();
     }
 
-    void serialConnectionTest(Stage primaryStage) {
-        SerialMonitorController smc = new SerialMonitorController();
+    public void connectDevice(SerialDevice device) {
+        if (plotter != null && plotter.getSerialDevice() != null) {
+            try {
+                if (plotter.getSerialDevice().getSerialPort().isOpened()) {
+                    plotter.getSerialDevice().getSerialPort().closePort();
+                }
+            } catch (SerialPortException ex) {
+                Logger.getLogger(GroundStation.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        plotter = new SensorPlotter(device);
+        SerialConsole console = new SerialConsole(device);
+        plotsTab.setContent(plotter);
+        consoleTab.setContent(console);
+    }
 
-        Scene scene = new Scene(smc);
-
-        primaryStage.setTitle("Serial monitor");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        connectTab.setContent(connect);
     }
 
     /**

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.Double?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<fx:root prefHeight="137.0" prefWidth="137.0" type="StackPane" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+      <StackPane fx:id="square" minHeight="66.0" minWidth="66.0" prefHeight="137.0" prefWidth="137.0">
+         <children>
+              <StackPane fx:id="graphic" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(to bottom, skyblue 48%,white 48.1% ,white 51.99%, #d7b17b 52%);              -fx-background-radius: 100%;  -fx-border-color: black;  -fx-border-radius: 100%;  -fx-border-width: 4;">
+                  <padding>
+                      <Insets top="10.0" />
+                  </padding>
+              </StackPane>
+              <Text fx:id="angleText" strokeType="OUTSIDE" strokeWidth="0.0" text="180.69°" wrappingWidth="64.0" StackPane.alignment="CENTER">
+                  <font>
+                      <Font name="Droid Sans" size="18.0" />
+                  </font>
+               <StackPane.margin>
+                  <Insets bottom="22.0" />
+               </StackPane.margin>
+              </Text>
+              <Polygon stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" StackPane.alignment="BOTTOM_CENTER">
+                  <points>
+                      <Double fx:value="0.0" />
+                      <Double fx:value="0.0" />
+                      <Double fx:value="15.0" />
+                      <Double fx:value="-20.0" />
+                      <Double fx:value="30.0" />
+                      <Double fx:value="0.0" />
+                  </points>
+               <StackPane.margin>
+                  <Insets bottom="4.0" />
+               </StackPane.margin>
+              </Polygon>
+         </children>
+      </StackPane>
+    </children>
+</fx:root>

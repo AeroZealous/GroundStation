@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<fx:root prefHeight="367.0" prefWidth="600.0" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <HBox prefHeight="26.0" prefWidth="576.0" spacing="5.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField fx:id="message" promptText="type here to send message" HBox.hgrow="ALWAYS" />
+            <Button fx:id="send" mnemonicParsing="false" text="Send" />
+         </children>
+      </HBox>
+   </top>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+   <center>
+      <TextArea fx:id="console" editable="false" prefHeight="321.0" prefWidth="165.0" promptText="Serial communication will appear here" wrapText="true" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="5.0" top="5.0" />
+         </BorderPane.margin>
+      </TextArea>
+   </center>
+</fx:root>
