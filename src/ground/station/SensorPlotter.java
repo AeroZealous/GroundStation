@@ -4,35 +4,27 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.AnimationTimer;
-import javafx.application.Application;
-import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.beans.binding.ListBinding;
-import javafx.beans.binding.ListExpression;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.ScrollPane;
 import org.controlsfx.control.CheckListView;
 
 /**
  *
  * @author Siddhesh Rane
  */
-public class SensorPlotter extends AnchorPane implements Initializable {
+public class SensorPlotter extends ScrollPane implements Initializable {
 
     private SerialDevice serialDevice;
     //Sensor DATA
@@ -58,6 +50,12 @@ public class SensorPlotter extends AnchorPane implements Initializable {
     private OrientationController yAngle;
     @FXML
     private OrientationController zAngle;
+    @FXML
+    private OrientationController xAngle1;
+    @FXML
+    private OrientationController xAngle2;
+    @FXML
+    private OrientationController xAngle3;
     @FXML
     private CheckListView<XYChart.Series<Double, Double>> filterList;
     private ObservableList<XYChart.Series<Double, Double>> filteredSeries;
@@ -123,6 +121,10 @@ public class SensorPlotter extends AnchorPane implements Initializable {
                         xGyInt += sensorData.xG * 0.02;
                         yGyInt += sensorData.yG * 0.02;
                         zGyInt += sensorData.zG * 0.02;
+                        double pitch = Math.atan2(sensorData.xFilA, Math.sqrt(sensorData.yFilA*sensorData.yFilA + sensorData.zFilA*sensorData.zFilA));
+                        double roll = -Math.atan2(sensorData.yFilA, Math.sqrt(sensorData.xFilA*sensorData.xFilA + sensorData.zFilA*sensorData.zFilA));
+                        xAngle1.setAngle(Math.toDegrees(roll));
+                        xAngle2.setAngle(Math.toDegrees(pitch));
                         xAngle.setAngle(sensorData.xAbs);
                         yAngle.setAngle(sensorData.yAbs);
                         zAngle.setAngle(sensorData.zAbs);

@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<fx:root alignment="CENTER" hgap="10.0" prefHeight="266.0" prefWidth="333.0" type="GridPane" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root alignment="CENTER" hgap="10.0" type="GridPane" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
    <columnConstraints>
       <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="240.0" percentWidth="50.0" prefWidth="112.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="199.0" percentWidth="50.0" prefWidth="206.0" />
@@ -22,7 +22,7 @@
       <RowConstraints vgrow="SOMETIMES" />
       <RowConstraints vgrow="SOMETIMES" />
       <RowConstraints vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="320.0" prefHeight="320.0" valignment="TOP" vgrow="ALWAYS" />
+      <RowConstraints valignment="TOP" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
       <Label focusTraversable="false" text="Port" GridPane.halignment="RIGHT">
@@ -85,7 +85,7 @@
             <Insets left="10.0" />
          </GridPane.margin>
       </Button>
-      <TextArea fx:id="info" editable="false" focusTraversable="false" maxWidth="1.7976931348623157E308" prefHeight="24.0" prefWidth="317.0" style="-fx-background-color: lightcoral; -fx-background-radius: 5px; -fx-text-fill: maroon;" text="Error" wrapText="true" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="6" GridPane.vgrow="ALWAYS">
+      <TextArea fx:id="info" editable="false" focusTraversable="false" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefRowCount="1" style="-fx-background-color: lightcoral; -fx-background-radius: 5px; -fx-text-fill: maroon;" text="Error" wrapText="true" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="6" GridPane.vgrow="SOMETIMES">
          <padding>
             <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
          </padding>

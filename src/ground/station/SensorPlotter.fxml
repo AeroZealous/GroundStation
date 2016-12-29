@@ -5,7 +5,7 @@
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -14,38 +14,41 @@
 <?import javafx.scene.text.Text?>
 <?import org.controlsfx.control.CheckListView?>
 
-<fx:root maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="689.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <GridPane alignment="CENTER" hgap="3.0" layoutX="53.0" layoutY="120.0" prefHeight="400.0" prefWidth="660.0" vgap="3.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<fx:root fitToHeight="true" fitToWidth="true" pannable="true" type="ScrollPane" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <GridPane alignment="CENTER" hgap="3.0" minHeight="-Infinity" prefHeight="600.0" prefWidth="693.0" vgap="5.0">
         <columnConstraints>
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" />
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="168.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="237.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" />
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="285.0" valignment="CENTER" vgrow="ALWAYS" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" valignment="CENTER" vgrow="ALWAYS" />
             <RowConstraints fillHeight="false" maxHeight="86.0" minHeight="-Infinity" prefHeight="20.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints fillHeight="false" valignment="CENTER" vgrow="NEVER" />
           <RowConstraints maxHeight="334.0" minHeight="10.0" prefHeight="95.0" valignment="TOP" vgrow="SOMETIMES" />
+            <RowConstraints valignment="TOP" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="334.0" minHeight="10.0" prefHeight="95.0" valignment="TOP" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="X" GridPane.rowIndex="1">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="X Roll" GridPane.rowIndex="1">
                <font>
-                  <Font name="DejaVu Sans Mono Bold" size="19.0" />
+                  <Font name="DejaVu Sans Mono Bold" size="16.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Y" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Y Pitch" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <font>
-                  <Font name="DejaVu Sans Mono Bold" size="19.0" />
+                  <Font name="DejaVu Sans Mono Bold" size="16.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Z" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Z Yaw" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <font>
-                  <Font name="DejaVu Sans Mono Bold" size="19.0" />
+                  <Font name="DejaVu Sans Mono Bold" size="16.0" />
                </font>
             </Text>
-            <OrientationController GridPane.rowIndex="2" fx:id="xAngle" />
-            <OrientationController fx:id="yAngle" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <OrientationController fx:id="zAngle" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <OrientationController GridPane.rowIndex="3" fx:id="xAngle" />
+            <OrientationController fx:id="yAngle" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <OrientationController fx:id="zAngle" GridPane.columnIndex="2" GridPane.rowIndex="3" />
             <LineChart fx:id="chart" animated="false" createSymbols="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
               <xAxis>
                 <NumberAxis fx:id="time" animated="false" autoRanging="false" forceZeroInRange="false" side="BOTTOM" />
@@ -56,14 +59,30 @@
             </LineChart>
             <VBox alignment="CENTER" spacing="4.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.valignment="TOP">
                <children>
-                  <CheckListView fx:id="filterList" editable="true" prefHeight="326.0" prefWidth="210.0" VBox.vgrow="ALWAYS" />
+                  <CheckListView fx:id="filterList" editable="true" prefHeight="252.0" prefWidth="173.0" VBox.vgrow="ALWAYS" />
                   <Label text="Check to include series in chart" textAlignment="CENTER" wrapText="true" VBox.vgrow="NEVER" />
                </children>
             </VBox>
+            <OrientationController GridPane.rowIndex="5" fx:id="xAngle1" />
+            <OrientationController prefHeight="129.0" prefWidth="199.0" GridPane.columnIndex="1" GridPane.rowIndex="5" fx:id="xAngle2" />
+            <OrientationController GridPane.columnIndex="2" GridPane.rowIndex="5" fx:id="xAngle3" />
+            <Text fill="#4d4d4d" strokeType="OUTSIDE" strokeWidth="0.0" text="Absolute Angle using Sensor Fusion" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+               <font>
+                  <Font name="DejaVu Sans" size="14.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets top="3.0" />
+               </GridPane.margin>
+            </Text>
+            <Text fill="#4d4d4d" strokeType="OUTSIDE" strokeWidth="0.0" text="Absolute Angle using Accelerometer" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+               <font>
+                  <Font name="DejaVu Sans" size="14.0" />
+               </font>
+            </Text>
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
       </GridPane>
-   </children>
+   </content>
 </fx:root>

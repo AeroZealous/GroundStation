@@ -20,7 +20,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import javafx.util.StringConverter;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 import jssc.SerialPortList;

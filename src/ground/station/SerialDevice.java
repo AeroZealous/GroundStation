@@ -42,9 +42,9 @@ public class SerialDevice implements SerialPortEventListener {
         double aFilX = 0;
         double aFilY = 0;
         double aFilZ = 0;
-        double xAbs;
-        double yAbs;
-        double zAbs;
+        double absX;
+        double absY;
+        double absZ;
 
         @Override
         public void run() {
@@ -59,10 +59,10 @@ public class SerialDevice implements SerialPortEventListener {
                 }
                 scanner.next(); //consume ';' 
                 if (scanner.hasNextDouble()) {
-                    gY = scanner.nextDouble();
+                    gX = scanner.nextDouble();
                 }
                 if (scanner.hasNextDouble()) {
-                    gX = scanner.nextDouble();
+                    gY = scanner.nextDouble();
                 }
                 if (scanner.hasNextDouble()) {
                     gZ = scanner.nextDouble();
@@ -86,18 +86,18 @@ public class SerialDevice implements SerialPortEventListener {
                     aFilZ = scanner.nextDouble();
                 }
                 if (scanner.hasNextDouble()) {
-                    xAbs = scanner.nextDouble();
+                    absX = scanner.nextDouble();
                 }
                 if (scanner.hasNextDouble()) {
-                    yAbs = scanner.nextDouble();
+                    absY = scanner.nextDouble();
                 }
                 if (scanner.hasNextDouble()) {
-                    zAbs = scanner.nextDouble();
+                    absZ = scanner.nextDouble();
                 }
 
 //                System.out.print(frame % 20 == 0 ? '|' : '.');
                 final double fr = frame;
-                SensorData sensorData = new SensorData(frame, gX, gY, gZ, aX, aY, aZ, aFilX, aFilY, aFilZ, xAbs, yAbs, zAbs);
+                SensorData sensorData = new SensorData(frame, gX, gY, gZ, aX, aY, aZ, aFilX, aFilY, aFilZ, absX, absY, absZ);
                 q.add(sensorData);
                 frame++;
             }
@@ -161,7 +161,7 @@ public class SerialDevice implements SerialPortEventListener {
             } catch (SerialPortException | IOException ex) {
                 Logger.getLogger(SerialDevice.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        }else System.out.println("port  < 0");
     }
 
     public SerialPort getSerialPort() {
