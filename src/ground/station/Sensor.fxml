@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import eu.hansolo.medusa.Gauge?>
+<?import ground.station.OrientationController?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<?import org.controlsfx.control.CheckListView?>
+
+
+<fx:root maxHeight="1.7976931348623157E308" spacing="20.0" type="VBox" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox maxHeight="1.7976931348623157E308" prefHeight="280.0" prefWidth="692.0" VBox.vgrow="ALWAYS">
+         <children>
+            <LineChart fx:id="chart" animated="false" axisSortingPolicy="NONE" createSymbols="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="221.0" prefWidth="499.0" HBox.hgrow="ALWAYS">
+               <xAxis>
+                  <NumberAxis fx:id="time" animated="false" autoRanging="false" forceZeroInRange="false" side="BOTTOM" />
+               </xAxis>
+               <yAxis>
+                  <NumberAxis fx:id="magnitude" side="LEFT" />
+               </yAxis>
+            </LineChart>
+            <VBox alignment="CENTER" spacing="4.0">
+               <children>
+                  <CheckListView fx:id="filterList" editable="true" VBox.vgrow="ALWAYS">
+                     <tooltip>
+                        <Tooltip text="Check to include series in chart" />
+                     </tooltip>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </CheckListView>
+                  <CheckBox fx:id="includeZeroOnChart" mnemonicParsing="false" selected="true" text="Include zero in chart" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="145.0" prefWidth="692.0" spacing="3.0" VBox.vgrow="SOMETIMES">
+         <children>
+            <GridPane alignment="CENTER" vgap="4.0">
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <OrientationController alignment="BOTTOM_LEFT" GridPane.rowIndex="1" fx:id="xAngle" />
+                  <OrientationController fx:id="yAngle" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <OrientationController fx:id="zAngle" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Roll" GridPane.rowIndex="2" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Pitch" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Yaw" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <Label text="Absolute Angle Through Sensor Fusion" GridPane.columnSpan="2147483647" />
+               </children>
+            </GridPane>
+            <Gauge fx:id="deltaTime" maxHeight="1.7976931348623157E308" maxValue="20.0" maxWidth="1.7976931348623157E308" minHeight="145.0" minMeasuredValue="0.0" minWidth="145.0" sectionsVisible="true" skinType="SIMPLE" subTitle="20 ms" title="ms" HBox.hgrow="ALWAYS" />
+            <GridPane alignment="CENTER" vgap="4.0">
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <OrientationController alignment="BOTTOM_LEFT" GridPane.rowIndex="1" fx:id="xAngle1" />
+                  <OrientationController fx:id="yAngle1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <OrientationController fx:id="zAngle1" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Roll" GridPane.rowIndex="2" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Pitch" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Yaw" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <Label text="Absolute Angle Through Accelerometer" GridPane.columnSpan="2147483647" />
+               </children>
+            </GridPane>
+         </children>
+      </HBox>
+   </children>
+</fx:root>

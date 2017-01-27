@@ -10,11 +10,9 @@
         <tabs>
           <Tab fx:id="connectTab" closable="false" text="Connect" />
           <Tab fx:id="plotsTab" closable="false" text="Plots" />
-            <Tab fx:id="consoleTab" text="Console">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-              </content>
-            </Tab>
+            <Tab fx:id="pidTab" text="PID" />
+            <Tab fx:id="motorTab" closable="false" text="Motors" />
+            <Tab fx:id="consoleTab" text="Console" />
         </tabs>
       </TabPane>
    </children>

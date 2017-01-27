@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.StackedBarChart?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root minHeight="-Infinity" minWidth="-Infinity" prefHeight="502.0" prefWidth="600.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="502.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <StackedBarChart fx:id="chart" animated="false" categoryGap="80.0" prefHeight="309.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+              <xAxis>
+                <CategoryAxis animated="false" side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis animated="false" autoRanging="false" lowerBound="-400.0" side="LEFT" tickLabelGap="4.0" tickUnit="50.0" upperBound="400.0" />
+              </yAxis>
+              
+                  </StackedBarChart>
+            <ToolBar prefHeight="40.0" prefWidth="200.0">
+               <items>
+                  <CheckBox fx:id="showLegend" mnemonicParsing="false" text="Show Legend" />
+                  <CheckBox fx:id="showLabels" layoutX="10.0" layoutY="15.0" mnemonicParsing="false" selected="true" text="Show Labels" />
+                  <ToggleButton fx:id="showRoll" mnemonicParsing="false" selected="true" text="Show Roll" />
+                  <ToggleButton fx:id="showPitch" layoutX="236.0" layoutY="10.0" mnemonicParsing="false" selected="true" text="Show Pitch" />
+                  <ToggleButton fx:id="showYaw" layoutX="346.0" layoutY="10.0" mnemonicParsing="false" selected="true" text="Show Yaw" />
+               </items>
+            </ToolBar>
+            <HBox fx:id="pieChartHBox" prefHeight="209.0" prefWidth="594.0">
+               <children>
+                  <PieChart fx:id="rollPID" animated="false" prefHeight="209.0" prefWidth="217.0" title="Roll" />
+                  <PieChart fx:id="pitchPID" animated="false" labelsVisible="false" legendVisible="false" prefHeight="209.0" prefWidth="217.0" title="Pitch" />
+                  <PieChart fx:id="yawPD" animated="false" labelsVisible="false" legendVisible="false" prefHeight="209.0" prefWidth="217.0" title="Yaw" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</fx:root>

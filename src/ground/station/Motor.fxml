@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import eu.hansolo.medusa.Gauge?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" type="HBox" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" HBox.hgrow="ALWAYS">
+         <children>
+            <Gauge fx:id="flMotor" maxHeight="1.7976931348623157E308" maxValue="1000.0" maxWidth="1.7976931348623157E308" minMeasuredValue="0.0" prefHeight="130.0" prefWidth="120.0" skinType="FLAT" title="Front Left" value="200.0" VBox.vgrow="ALWAYS" />
+            <Gauge fx:id="rlMotor" maxHeight="1.7976931348623157E308" maxValue="1000.0" maxWidth="1.7976931348623157E308" minMeasuredValue="0.0" prefHeight="130.0" prefWidth="120.0" skinType="FLAT" title="Rear Left" value="200.0" VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
+      <Gauge fx:id="throttle" animated="true" interactive="true" maxHeight="1.7976931348623157E308" maxValue="2000.0" maxWidth="1.7976931348623157E308" minMeasuredValue="1000.0" minValue="1000.0" skinType="MODERN" subTitle="OFF" title="Throttle" value="1200.0" HBox.hgrow="ALWAYS" />
+      <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" HBox.hgrow="ALWAYS">
+         <children>
+            <Gauge fx:id="frMotor" averageVisible="true" averagingEnabled="true" maxHeight="1.7976931348623157E308" maxValue="1000.0" maxWidth="1.7976931348623157E308" minMeasuredValue="0.0" prefHeight="130.0" prefWidth="120.0" skinType="FLAT" startAngle="0.0" title="Front Right" value="200.0" VBox.vgrow="ALWAYS" />
+            <Gauge fx:id="rrMotor" maxHeight="1.7976931348623157E308" maxValue="1000.0" maxWidth="1.7976931348623157E308" minMeasuredValue="0.0" prefHeight="130.0" prefWidth="120.0" skinType="FLAT" title="Rear Right" value="200.0" VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
+   </children>
+</fx:root>

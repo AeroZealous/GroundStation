@@ -12,7 +12,7 @@
       <HBox prefHeight="26.0" prefWidth="576.0" spacing="5.0" BorderPane.alignment="CENTER">
          <children>
             <TextField fx:id="message" promptText="type here to send message" HBox.hgrow="ALWAYS" />
-            <Button fx:id="send" mnemonicParsing="false" text="Send" />
+            <Button fx:id="send" focusTraversable="false" mnemonicParsing="false" text="Send" />
          </children>
       </HBox>
    </top>
@@ -20,7 +20,7 @@
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
    </padding>
    <center>
-      <TextArea fx:id="console" editable="false" prefHeight="321.0" prefWidth="165.0" promptText="Serial communication will appear here" wrapText="true" BorderPane.alignment="CENTER">
+      <TextArea fx:id="console" editable="false" focusTraversable="false" prefHeight="321.0" prefWidth="165.0" promptText="Serial communication will appear here" wrapText="true" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="5.0" top="5.0" />
          </BorderPane.margin>

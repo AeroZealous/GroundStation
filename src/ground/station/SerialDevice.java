@@ -3,6 +3,7 @@ package ground.station;
 import java.io.IOException;
 import java.io.PipedReader;
 import java.io.PipedWriter;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
@@ -45,65 +46,145 @@ public class SerialDevice implements SerialPortEventListener {
         double absX;
         double absY;
         double absZ;
+        double timedelta;
+        double motorFL, motorFR, motorRR, motorRL;
+        double rcRoll, rcPitch, rcYaw, rcThrottle, rcMode;
+        double pitchP, pitchI, pitchD;
+        double rollP, rollI, rollD;
+        double yawP, yawD;
 
         @Override
         public void run() {
             Scanner scanner = new Scanner(reader);
             scanner.useDelimiter("\\s+");
             double frame = 0;
+            boolean inPacket = false;
             while (scanner.hasNext()) {
-                if (!scanner.hasNext(";")) {
-                    String skipped = scanner.next();
-                    System.out.println("skipped = '" + skipped + '\'');
-                    continue;
+                String token = scanner.next();
+                switch (token) {
+                    case "{":   //start new packet
+                        inPacket = true;
+                        break;
+                    case "}":   //packet ended; commit
+                        if (!inPacket) {
+                            break;
+                        }
+                        inPacket = false;
+                        SensorData sensorData = new SensorData(frame, 0, timedelta, gX, gY, gZ, aX, aY, aZ, rcRoll, rcPitch, rcYaw, rcThrottle, rcMode, aFilX, aFilY, aFilZ, absX, absY, absZ, motorFL, motorFR, motorRR, motorRL, pitchP, pitchI, pitchD, rollP, rollI, rollD, yawP, yawD);
+                        q.add(sensorData);
+                        frame++;
+                        break;
+                    case "ms":
+                        if (scanner.hasNextDouble()) {
+                            timedelta = scanner.nextDouble();
+                        }
+                        break;
+                    case "gy":
+                        if (scanner.hasNextDouble()) {
+                            gX = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            gY = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            gZ = scanner.nextDouble();
+                        }
+                        break;
+                    case "ac":
+                        if (scanner.hasNextDouble()) {
+                            aX = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            aY = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            aZ = scanner.nextDouble();
+                        }
+                        break;
+                    case "acfil":
+                        if (scanner.hasNextDouble()) {
+                            aFilX = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            aFilY = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            aFilZ = scanner.nextDouble();
+                        }
+                        break;
+                    case "ang":
+                        if (scanner.hasNextDouble()) {
+                            absX = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            absY = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            absZ = scanner.nextDouble();
+                        }
+                        break;
+                    case "rc6":
+                        if (scanner.hasNextDouble()) {
+                            rcRoll = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            rcPitch = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            rcYaw = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            rcThrottle = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            rcMode = scanner.nextDouble();
+                        }
+                        break;
+                    case "motor":
+                        if (scanner.hasNextDouble()) {
+                            motorFL = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            motorFR = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            motorRR = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            motorRL = scanner.nextDouble();
+                        }
+                        break;
+                    case "pid":
+                        if (scanner.hasNextDouble()) {
+                            pitchP = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            pitchI = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            pitchD = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            rollP = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            rollI = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            rollD = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            yawP = scanner.nextDouble();
+                        }
+                        if (scanner.hasNextDouble()) {
+                            yawD = scanner.nextDouble();
+                        }
+                        break;
                 }
-                scanner.next(); //consume ';' 
-                if (scanner.hasNextDouble()) {
-                    gX = scanner.nextDouble();
-                }
-                if (scanner.hasNextDouble()) {
-                    gY = scanner.nextDouble();
-                }
-                if (scanner.hasNextDouble()) {
-                    gZ = scanner.nextDouble();
-                }
-                if (scanner.hasNextDouble()) {
-                    aX = scanner.nextDouble();
-                }
-                if (scanner.hasNextDouble()) {
-                    aY = scanner.nextDouble();
-                }
-                if (scanner.hasNextDouble()) {
-                    aZ = scanner.nextDouble();
-                }
-                if (scanner.hasNextDouble()) {
-                    aFilX = scanner.nextDouble();
-                }
-                if (scanner.hasNextDouble()) {
-                    aFilY = scanner.nextDouble();
-                }
-                if (scanner.hasNextDouble()) {
-                    aFilZ = scanner.nextDouble();
-                }
-                if (scanner.hasNextDouble()) {
-                    absX = scanner.nextDouble();
-                }
-                if (scanner.hasNextDouble()) {
-                    absY = scanner.nextDouble();
-                }
-                if (scanner.hasNextDouble()) {
-                    absZ = scanner.nextDouble();
-                }
-
-//                System.out.print(frame % 20 == 0 ? '|' : '.');
-                final double fr = frame;
-                SensorData sensorData = new SensorData(frame, gX, gY, gZ, aX, aY, aZ, aFilX, aFilY, aFilZ, absX, absY, absZ);
-                q.add(sensorData);
-                frame++;
             }
         }
     };
-
+    
     /**
      * Creates a SerialDevice class for a device connected to the given
      * SerialPort. {@code port} has to be non-null and opened.
@@ -112,6 +193,7 @@ public class SerialDevice implements SerialPortEventListener {
      * @param port the SerialPort to which the device is connected
      */
     public SerialDevice(SerialPort port) {
+
         if (port == null) {
             throw new NullPointerException("Serial port cannot be null");
         }
@@ -153,7 +235,7 @@ public class SerialDevice implements SerialPortEventListener {
                 writer.write(msg);
                 writer.flush();
                 buffer.append(msg);
-                if (buffer.length() > 2000) {
+                if (buffer.length() > 64 * 1024) {
                     buffer.delete(0, msg.length());
                 }
                 Platform.runLater(output::fireValueChangedEvent);
@@ -161,7 +243,9 @@ public class SerialDevice implements SerialPortEventListener {
             } catch (SerialPortException | IOException ex) {
                 Logger.getLogger(SerialDevice.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else System.out.println("port  < 0");
+        } else {
+            System.out.println("port  < 0");
+        }
     }
 
     public SerialPort getSerialPort() {
@@ -196,51 +280,88 @@ public class SerialDevice implements SerialPortEventListener {
 
     public static final class SensorData {
 
-        public final double frame;
-        public final double xG, yG, zG, xA, yA, zA;
-        public final double xFilA, yFilA, zFilA;
-        public double xAbs, yAbs, zAbs;
-
-        public SensorData(double frame, double xG, double yG, double zG, double xA, double yA, double zA) {
+        //internal
+        public double frame;
+        //time
+        public double timestamp, delta;
+        //raw gyro+accelerometer
+        public double gX, gY, gZ, aX, aY, aZ;
+        //raw receiver
+        public double rcRoll, rcPitch, rcYaw, rcThrottle, rcMode;
+        //computed filtered accelerometer + absolute angle
+        public double filaX, filaY, filaZ;
+        public double absX, absY, absZ;
+        //motor commands
+        public double motorFL, motorFR, motorRR, motorRL;
+        //PID
+        double pitchP, pitchI, pitchD;
+        double rollP, rollI, rollD;
+        double yawP, yawD;
+        HashMap<String, Double> extra;
+        
+        public SensorData(double frame, double timestamp, double delta, double gX, double gY, double gZ, double aX, double aY, double aZ, double rcRoll, double rcPitch, double rcYaw, double rcThrottle, double rcMode, double filaX, double filaY, double filaZ, double absX, double absY, double absZ, double motorFL, double motorFR, double motorRR, double motorRL) {
             this.frame = frame;
-            this.xG = xG;
-            this.yG = yG;
-            this.zG = zG;
-            this.xA = xA;
-            this.yA = yA;
-            this.zA = zA;
-            this.xFilA = 0;
-            this.yFilA = 0;
-            this.zFilA = 0;
+            this.timestamp = timestamp;
+            this.delta = delta;
+            this.gX = gX;
+            this.gY = gY;
+            this.gZ = gZ;
+            this.aX = aX;
+            this.aY = aY;
+            this.aZ = aZ;
+            this.rcRoll = rcRoll;
+            this.rcPitch = rcPitch;
+            this.rcYaw = rcYaw;
+            this.rcThrottle = rcThrottle;
+            this.rcMode = rcMode;
+            this.filaX = filaX;
+            this.filaY = filaY;
+            this.filaZ = filaZ;
+            this.absX = absX;
+            this.absY = absY;
+            this.absZ = absZ;
+            this.motorFL = motorFL;
+            this.motorFR = motorFR;
+            this.motorRR = motorRR;
+            this.motorRL = motorRL;
         }
 
-        public SensorData(double frame, double xG, double yG, double zG, double xA, double yA, double zA, double xFilA, double yFilA, double zFilA) {
+        public SensorData(double frame, double timestamp, double delta, double gX, double gY, double gZ, double aX, double aY, double aZ, double rcRoll, double rcPitch, double rcYaw, double rcThrottle, double rcMode, double filaX, double filaY, double filaZ, double absX, double absY, double absZ, double motorFL, double motorFR, double motorRR, double motorRL, double pitchP, double pitchI, double pitchD, double rollP, double rollI, double rollD, double yawP, double yawD) {
             this.frame = frame;
-            this.xG = xG;
-            this.yG = yG;
-            this.zG = zG;
-            this.xA = xA;
-            this.yA = yA;
-            this.zA = zA;
-            this.xFilA = xFilA;
-            this.yFilA = yFilA;
-            this.zFilA = zFilA;
+            this.timestamp = timestamp;
+            this.delta = delta;
+            this.gX = gX;
+            this.gY = gY;
+            this.gZ = gZ;
+            this.aX = aX;
+            this.aY = aY;
+            this.aZ = aZ;
+            this.rcRoll = rcRoll;
+            this.rcPitch = rcPitch;
+            this.rcYaw = rcYaw;
+            this.rcThrottle = rcThrottle;
+            this.rcMode = rcMode;
+            this.filaX = filaX;
+            this.filaY = filaY;
+            this.filaZ = filaZ;
+            this.absX = absX;
+            this.absY = absY;
+            this.absZ = absZ;
+            this.motorFL = motorFL;
+            this.motorFR = motorFR;
+            this.motorRR = motorRR;
+            this.motorRL = motorRL;
+            this.pitchP = pitchP;
+            this.pitchI = pitchI;
+            this.pitchD = pitchD;
+            this.rollP = rollP;
+            this.rollI = rollI;
+            this.rollD = rollD;
+            this.yawP = yawP;
+            this.yawD = yawD;
         }
 
-        public SensorData(double frame, double xG, double yG, double zG, double xA, double yA, double zA, double xFilA, double yFilA, double zFilA, double xAbs, double yAbs, double zAbs) {
-            this.frame = frame;
-            this.xG = xG;
-            this.yG = yG;
-            this.zG = zG;
-            this.xA = xA;
-            this.yA = yA;
-            this.zA = zA;
-            this.xFilA = xFilA;
-            this.yFilA = yFilA;
-            this.zFilA = zFilA;
-            this.xAbs = xAbs;
-            this.yAbs = yAbs;
-            this.zAbs = zAbs;
+        private SensorData() {
         }
 
     }

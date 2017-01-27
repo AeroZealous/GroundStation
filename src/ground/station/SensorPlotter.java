@@ -1,15 +1,15 @@
 package ground.station;
 
+import eu.hansolo.medusa.Gauge;
+import eu.hansolo.medusa.Section;
+import ground.station.SerialDevice.SensorData;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.animation.AnimationTimer;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,16 +17,18 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import org.controlsfx.control.CheckListView;
 
 /**
  *
  * @author Siddhesh Rane
  */
-public class SensorPlotter extends ScrollPane implements Initializable {
+public class SensorPlotter extends VBox implements Initializable {
 
-    private SerialDevice serialDevice;
     //Sensor DATA
     XYChart.Series<Double, Double> xGyro;
     XYChart.Series<Double, Double> yGyro;
@@ -38,12 +40,15 @@ public class SensorPlotter extends ScrollPane implements Initializable {
     XYChart.Series<Double, Double> yAccFil;
     XYChart.Series<Double, Double> zAccFil;
     ObservableList<XYChart.Series<Double, Double>> data;
+
     @FXML
     LineChart<Double, Double> chart;
     @FXML
     NumberAxis time;
     @FXML
     NumberAxis magnitude;
+    @FXML
+    CheckBox includeZeroOnChart;
     @FXML
     private OrientationController xAngle;
     @FXML
@@ -53,9 +58,11 @@ public class SensorPlotter extends ScrollPane implements Initializable {
     @FXML
     private OrientationController xAngle1;
     @FXML
-    private OrientationController xAngle2;
+    private OrientationController yAngle1;
     @FXML
-    private OrientationController xAngle3;
+    private OrientationController zAngle1;
+    @FXML
+    private Gauge deltaTime;
     @FXML
     private CheckListView<XYChart.Series<Double, Double>> filterList;
     private ObservableList<XYChart.Series<Double, Double>> filteredSeries;
@@ -63,7 +70,7 @@ public class SensorPlotter extends ScrollPane implements Initializable {
     //Computed Sensor data
     private double xGyInt, yGyInt, zGyInt;
 
-    public SensorPlotter(SerialDevice device) {
+    public SensorPlotter() {
         xGyro = new XYChart.Series<>();
         xGyro.setName("Gyro X");
         yGyro = new XYChart.Series<>();
@@ -83,7 +90,7 @@ public class SensorPlotter extends ScrollPane implements Initializable {
         zAccFil = new XYChart.Series<>();
         zAccFil.setName("Accelerometer Z Filtered");
         data = FXCollections.observableArrayList(xGyro, yGyro, zGyro, xAcc, yAcc, zAcc, xAccFil, yAccFil, zAccFil);
-        FXMLLoader loader = new FXMLLoader(SensorPlotter.class.getResource("SensorPlotter.fxml"));
+        FXMLLoader loader = new FXMLLoader(SensorPlotter.class.getResource("Sensor.fxml"));
         loader.setRoot(this);
         loader.setController(this);
         try {
@@ -91,90 +98,69 @@ public class SensorPlotter extends ScrollPane implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(SensorPlotter.class.getName()).log(Level.SEVERE, null, ex);
         }
-        setSerialDevice(device);
     }
 
-    public void setSerialDevice(SerialDevice device) {
-        if (device == null) {
-            throw new NullPointerException("SerialDevice cannot be null");
+    public void processSensorData(SensorData sensorData) {
+        if (sensorData == null) {
+            return;
         }
-        serialDevice = device;
-        timer.start();
-    }
+        double pitch = Math.atan2(sensorData.filaX, Math.sqrt(sensorData.filaY * sensorData.filaY + sensorData.filaZ * sensorData.filaZ));
+        double roll = -Math.atan2(sensorData.filaY, Math.sqrt(sensorData.filaX * sensorData.filaX + sensorData.filaZ * sensorData.filaZ));
+        xAngle1.setAngle(Math.toDegrees(roll));
+        yAngle1.setAngle(Math.toDegrees(pitch));
+        xAngle.setAngle(sensorData.absX);
+        yAngle.setAngle(sensorData.absY);
+        zAngle.setAngle(sensorData.absZ);
+        deltaTime.setValue(sensorData.delta);
+       
+        xGyro.getData().add(new XYChart.Data<>(sensorData.frame, sensorData.gX));
+        yGyro.getData().add(new XYChart.Data<>(sensorData.frame, sensorData.gY));
+        zGyro.getData().add(new XYChart.Data<>(sensorData.frame, sensorData.gZ));
 
-    public SerialDevice getSerialDevice() {
-        return serialDevice;
-    }
+        xAcc.getData().add(new XYChart.Data<>(sensorData.frame, sensorData.aX));
+        yAcc.getData().add(new XYChart.Data<>(sensorData.frame, sensorData.aY));
+        zAcc.getData().add(new XYChart.Data<>(sensorData.frame, sensorData.aZ));
 
-    AnimationTimer timer = new AnimationTimer() {
-        @Override
-        public void handle(long now) {
-            if (serialDevice.getSerialPort().isOpened()) {
-                double diff = 0;
-                ConcurrentLinkedQueue<SerialDevice.SensorData> q = serialDevice.q;
-                for (int i = 0; i < 30; i++) {
-                    if (q.isEmpty()) {
-                        break;
-                    }
-                    SerialDevice.SensorData sensorData = q.poll();
-                    if (sensorData != null) {
-                        xGyInt += sensorData.xG * 0.02;
-                        yGyInt += sensorData.yG * 0.02;
-                        zGyInt += sensorData.zG * 0.02;
-                        double pitch = Math.atan2(sensorData.xFilA, Math.sqrt(sensorData.yFilA*sensorData.yFilA + sensorData.zFilA*sensorData.zFilA));
-                        double roll = -Math.atan2(sensorData.yFilA, Math.sqrt(sensorData.xFilA*sensorData.xFilA + sensorData.zFilA*sensorData.zFilA));
-                        xAngle1.setAngle(Math.toDegrees(roll));
-                        xAngle2.setAngle(Math.toDegrees(pitch));
-                        xAngle.setAngle(sensorData.xAbs);
-                        yAngle.setAngle(sensorData.yAbs);
-                        zAngle.setAngle(sensorData.zAbs);
-                        xGyro.getData().add(new XYChart.Data<>(sensorData.frame, sensorData.xG));
-                        yGyro.getData().add(new XYChart.Data<>(sensorData.frame, sensorData.yG));
-                        zGyro.getData().add(new XYChart.Data<>(sensorData.frame, sensorData.zG));
+        xAccFil.getData().add(new XYChart.Data<>(sensorData.frame, sensorData.filaX));
+        yAccFil.getData().add(new XYChart.Data<>(sensorData.frame, sensorData.filaY));
+        zAccFil.getData().add(new XYChart.Data<>(sensorData.frame, sensorData.filaZ));
+        double diff = sensorData.frame - time.getUpperBound();
 
-                        xAcc.getData().add(new XYChart.Data<>(sensorData.frame, sensorData.xA));
-                        yAcc.getData().add(new XYChart.Data<>(sensorData.frame, sensorData.yA));
-                        zAcc.getData().add(new XYChart.Data<>(sensorData.frame, sensorData.zA));
-
-                        xAccFil.getData().add(new XYChart.Data<>(sensorData.frame, sensorData.xFilA));
-                        yAccFil.getData().add(new XYChart.Data<>(sensorData.frame, sensorData.yFilA));
-                        zAccFil.getData().add(new XYChart.Data<>(sensorData.frame, sensorData.zFilA));
-                        diff = sensorData.frame - time.getUpperBound();
-                    }
-                    if (diff > 0) {
-                        time.setLowerBound(diff + time.getLowerBound());
-                        time.setUpperBound(diff + time.getUpperBound());
-                        xGyro.getData().remove(0);
-                        yGyro.getData().remove(0);
-                        zGyro.getData().remove(0);
-                        xAcc.getData().remove(0);
-                        yAcc.getData().remove(0);
-                        zAcc.getData().remove(0);
-                        xAccFil.getData().remove(0);
-                        yAccFil.getData().remove(0);
-                        zAccFil.getData().remove(0);
-                    }
-                }
-            }
+        if (diff > 0) {
+            time.setLowerBound(diff + time.getLowerBound());
+            time.setUpperBound(diff + time.getUpperBound());
+            xGyro.getData().remove(0);
+            yGyro.getData().remove(0);
+            zGyro.getData().remove(0);
+            xAcc.getData().remove(0);
+            yAcc.getData().remove(0);
+            zAcc.getData().remove(0);
+            xAccFil.getData().remove(0);
+            yAccFil.getData().remove(0);
+            zAccFil.getData().remove(0);
         }
-    };
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         filterList.setItems(data);
         filterList.getCheckModel().checkAll();
-        filterList.getSelectionModel().getSelectedItems().addListener((ListChangeListener.Change<? extends XYChart.Series<Double, Double>> c) -> {
-            System.out.println(filterList.getSelectionModel().getSelectedItems());
-        });
 //        filteredSeries = data.filtered(filterList.getCheckModel().getSelectedItems()::contains);
         filteredSeries = FXCollections.observableArrayList(data);
         filterList.getCheckModel().getCheckedItems().addListener((Observable ob) -> {
             filteredSeries.setAll(filterList.getCheckModel().getCheckedItems());
         });
         chart.setData(filteredSeries);
+        magnitude.forceZeroInRangeProperty().bind(includeZeroOnChart.selectedProperty());
         xAngle.setAngle(0);
         yAngle.setAngle(0);
         zAngle.setAngle(0);
+        deltaTime.setSections(
+                new Section(0, 5, Color.LIGHTGREEN),
+                new Section(5, 10, Color.GREENYELLOW),
+                new Section(10, 15, Color.ORANGE),
+                new Section(15, 20, Color.RED));
+        deltaTime.setSectionsVisible(true);
     }
 
 }

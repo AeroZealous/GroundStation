@@ -3,14 +3,25 @@ package ground.station;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
+import javafx.animation.FillTransition;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.RotateTransition;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point3D;
 import javafx.geometry.Pos;
+import javafx.scene.Camera;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -22,8 +33,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
@@ -42,10 +57,10 @@ public class Experiments extends Application {
 //        noiseSimulatorTest(primaryStage);
 //        arduinoSerialConnectorTest(primaryStage);
 //        serialMonitorTest(primaryStage);
-//        serialConnectionTest(primaryStage);
 //        groundSationApp(primaryStage);
 //        animationTimerTest(primaryStage);
 //orientationTest(primaryStage);
+        test3D(primaryStage);
     }
 
     void animationTimerTest(Stage primaryStage) {
@@ -196,6 +211,41 @@ public class Experiments extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle("Orientation Control test");
         primaryStage.show();
+    }
+
+    void test3D(Stage primaryStage) {
+        Box box = new Box(200, 100, 50);
+        final PhongMaterial material = new PhongMaterial(Color.BLUEVIOLET);
+        Timeline t = new Timeline(new  KeyFrame(Duration.seconds(4), new KeyValue(material.diffuseColorProperty(), Color.SPRINGGREEN)));
+        t.setCycleCount(Animation.INDEFINITE);
+        t.setAutoReverse(true);
+        t.play();
+        box.setMaterial(material);
+        box.setLayoutX(100);
+        box.setLayoutY(100);
+        RotateTransition rotateTransition = new RotateTransition(Duration.seconds(6), box);
+        rotateTransition.setAxis(new Point3D(0, 1, 0.5));
+        rotateTransition.setByAngle(360);
+        rotateTransition.setCycleCount(Animation.INDEFINITE);
+        rotateTransition.setInterpolator(Interpolator.LINEAR);
+        rotateTransition.playFromStart();
+        
+        Camera c = new PerspectiveCamera();
+        StackPane group = new StackPane(box);
+        Scene scene = new Scene(group);
+        scene.setOnMouseMoved(me->{
+//            c.setLayoutX(me.getSceneX());
+//            c.setLayoutY(me.getSceneY());
+        });
+        
+        scene.setCamera(c);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("3D Test");
+        primaryStage.show();
+    }
+    
+    void medusaTest(Stage primaryStage){
+        
     }
 
     /**
